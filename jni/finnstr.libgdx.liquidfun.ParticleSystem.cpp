@@ -226,10 +226,34 @@ JNIEXPORT jlong JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParti
 
 }
 
+JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniUpdateParticlePositionAndColorBuffer(JNIEnv* env, jobject object, jlong addr, jfloatArray obj_buffer) {
+	float* buffer = (float*)env->GetPrimitiveArrayCritical(obj_buffer, 0);
+
+
+//@line:345
+
+		b2ParticleSystem* system = (b2ParticleSystem*)addr;
+		int32 count = system->GetParticleCount();
+		
+		jfloatArray array;
+		
+		for(int i = 0; i < count; i++) {
+			buffer[i * 6] = system->GetPositionBuffer()[i].x;
+			buffer[i * 6 + 1] = system->GetPositionBuffer()[i].y;
+			buffer[i * 6 + 2] = system->GetColorBuffer()[i].r / 255.0;
+			buffer[i * 6 + 3] = system->GetColorBuffer()[i].g / 255.0;
+			buffer[i * 6 + 4] = system->GetColorBuffer()[i].b / 255.0;
+			buffer[i * 6 + 5] = system->GetColorBuffer()[i].a / 255.0;
+		}
+	
+	env->ReleasePrimitiveArrayCritical(obj_buffer, buffer, 0);
+
+}
+
 JNIEXPORT jfloatArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParticleVelocityBufferX(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:339
+//@line:369
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		int32 count = system->GetParticleCount();
@@ -251,7 +275,7 @@ JNIEXPORT jfloatArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGe
 JNIEXPORT jfloatArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParticleVelocityBufferY(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:354
+//@line:384
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		int32 count = system->GetParticleCount();
@@ -273,7 +297,7 @@ JNIEXPORT jfloatArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGe
 JNIEXPORT jintArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParticleColorBufferR(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:378
+//@line:408
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		int32 count = system->GetParticleCount();
@@ -295,7 +319,7 @@ JNIEXPORT jintArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetP
 JNIEXPORT jintArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParticleColorBufferG(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:394
+//@line:424
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		int32 count = system->GetParticleCount();
@@ -317,7 +341,7 @@ JNIEXPORT jintArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetP
 JNIEXPORT jintArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParticleColorBufferB(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:410
+//@line:440
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		int32 count = system->GetParticleCount();
@@ -339,7 +363,7 @@ JNIEXPORT jintArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetP
 JNIEXPORT jintArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParticleColorBufferA(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:426
+//@line:456
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		int32 count = system->GetParticleCount();
@@ -361,7 +385,7 @@ JNIEXPORT jintArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetP
 JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniSetParticleRadius(JNIEnv* env, jobject object, jlong addr, jfloat pRadius) {
 
 
-//@line:509
+//@line:539
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		system->SetRadius( pRadius );
@@ -372,7 +396,7 @@ JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniSetPartic
 JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParticleRadius(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:518
+//@line:548
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		return (jfloat)system->GetRadius();
@@ -383,7 +407,7 @@ JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetPart
 JNIEXPORT jint JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParticleCount(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:528
+//@line:558
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		return (jint)system->GetParticleCount();
@@ -394,7 +418,7 @@ JNIEXPORT jint JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetPartic
 JNIEXPORT jint JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParticleGroupCount(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:537
+//@line:567
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		return (jint)system->GetParticleGroupCount();
@@ -405,7 +429,7 @@ JNIEXPORT jint JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetPartic
 JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniSetPaused(JNIEnv* env, jobject object, jlong addr, jboolean paused) {
 
 
-//@line:550
+//@line:580
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		system->SetPaused(paused);
@@ -416,7 +440,7 @@ JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniSetPaused
 JNIEXPORT jboolean JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetPaused(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:559
+//@line:589
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		return (jboolean)system->GetPaused();
@@ -427,7 +451,7 @@ JNIEXPORT jboolean JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetPa
 JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniSetParticleDensity(JNIEnv* env, jobject object, jlong addr, jfloat pDensity) {
 
 
-//@line:568
+//@line:598
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		system->SetDensity(pDensity);
@@ -438,7 +462,7 @@ JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniSetPartic
 JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParticleDensity(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:577
+//@line:607
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		return (jfloat)system->GetDensity();
@@ -449,7 +473,7 @@ JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetPart
 JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniSetParticleGravityScale(JNIEnv* env, jobject object, jlong addr, jfloat pGravityScale) {
 
 
-//@line:586
+//@line:616
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		system->SetGravityScale(pGravityScale);
@@ -460,7 +484,7 @@ JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniSetPartic
 JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParticleGravityScale(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:595
+//@line:625
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		return (jfloat)system->GetGravityScale();
@@ -471,7 +495,7 @@ JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetPart
 JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniSetParticleMaxCount(JNIEnv* env, jobject object, jlong addr, jfloat pCount) {
 
 
-//@line:604
+//@line:634
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		system->SetMaxParticleCount(pCount);
@@ -482,7 +506,7 @@ JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniSetPartic
 JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetMaxParticleCount(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:613
+//@line:643
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		return (jint)system->GetMaxParticleCount();
@@ -493,7 +517,7 @@ JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetMaxP
 JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniSetParticleDamping(JNIEnv* env, jobject object, jlong addr, jfloat pDamping) {
 
 
-//@line:622
+//@line:652
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		system->SetDamping(pDamping);
@@ -504,7 +528,7 @@ JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniSetPartic
 JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParticleDamping(JNIEnv* env, jobject object, jlong addr) {
 
 
-//@line:631
+//@line:661
 
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		return (jfloat)system->GetDamping();
@@ -515,7 +539,7 @@ JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetPart
 JNIEXPORT jstring JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetVersionString(JNIEnv* env, jobject object, jlong worldAddr) {
 
 
-//@line:640
+//@line:670
 
 		b2World* world = (b2World*)worldAddr;
 		const char* version = world->GetVersionString();

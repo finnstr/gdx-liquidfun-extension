@@ -105,6 +105,14 @@ JNIEXPORT jlong JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParti
 
 /*
  * Class:     finnstr_libgdx_liquidfun_ParticleSystem
+ * Method:    jniUpdateParticlePositionAndColorBuffer
+ * Signature: (J[F)V
+ */
+JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniUpdateParticlePositionAndColorBuffer
+  (JNIEnv *, jobject, jlong, jfloatArray);
+
+/*
+ * Class:     finnstr_libgdx_liquidfun_ParticleSystem
  * Method:    jniGetParticleVelocityBufferX
  * Signature: (J)[F
  */

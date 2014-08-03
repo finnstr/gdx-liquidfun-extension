@@ -1,4 +1,3 @@
-
 package finnstr.libgdx.liquidfun;
 
 import com.badlogic.gdx.Gdx;
@@ -10,20 +9,22 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 
-/** Renders all particles from a given {@link ParticleSystem}
- * @author FinnStr */
-public class ParticleDebugRenderer {
+import finnstr.libgdx.liquidfun.ParticleSystem;
+
+public class ColorParticleRenderer {
 
 	protected ShaderProgram mShader;
 	protected Mesh mMesh;
 	
-	public ParticleDebugRenderer(Color pColor, int pMaxParticleNumber) {
+	public ColorParticleRenderer(Color pColor, int pMaxParticleNumber) {
 		mShader = createShader(pColor);
+		setMaxParticleNumber(pMaxParticleNumber);
 	}
 
 	public void setMaxParticleNumber(int pCount) {
 		if(mMesh != null) mMesh.dispose();
-		mMesh = new Mesh(false, pCount, pCount, new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE));
+		mMesh = new Mesh(false, pCount, pCount, new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE), 
+															 new VertexAttribute(Usage.Color, 4, ShaderProgram.COLOR_ATTRIBUTE));
 	}
 	
 	public int getMaxParticleNumber() {
@@ -41,7 +42,7 @@ public class ParticleDebugRenderer {
 		mShader.setUniformf("scale", pRadiusScale);
 		mShader.setUniformMatrix("u_projTrans", pProjMatrix);
 		
-		mMesh.setVertices(pSystem.getParticlePositionBufferArray(true));
+		mMesh.setVertices(pSystem.getParticlePositionAndColorBufferArray(true));
 		mMesh.render(mShader, GL20.GL_POINTS, 0, pSystem.getParticleCount());
 		mShader.end();
 		Gdx.gl20.glDisable(0x8861);
@@ -60,10 +61,14 @@ public class ParticleDebugRenderer {
 				+ "uniform float scale;\n"
 				+ "uniform mat4 u_projTrans;\n" //
 				+ "\n" //
+				+ "attribute vec4 a_color;\n" //
+				+ "varying vec4 v_color;\n" //
+				+ "\n" //
 				+ "void main()\n" //
 				+ "{\n" //
 				+ "   gl_Position =  u_projTrans * vec4(a_position.xy, 0.0, 1.0);\n" //
 				+ "   gl_PointSize = scale * particlesize;\n" //
+				+ "   v_color = a_color;" //
 				+ "}\n";
 		final String fragmentShader = "#ifdef GL_ES\n" //
 		      + "#define LOWP lowp\n" //
@@ -71,11 +76,12 @@ public class ParticleDebugRenderer {
 		      + "#else\n" //
 		      + "#define LOWP \n" //
 		      + "#endif\n" //
+		      + "varying vec4 v_color;\n" //
 				+ "void main()\n"//
 				+ "{\n" //
 				+ " float len = length(vec2(gl_PointCoord.x - 0.5, gl_PointCoord.y - 0.5));\n" //
 				+ " if(len <= 0.5) {\n" //
-				+ " 	gl_FragColor = vec4(" + pColor.r + "," + pColor.g + "," + pColor.b + "," + pColor.a + ");\n" //
+				+ " 	gl_FragColor = v_color;\n" //
 				+ " } else {\n" //
 				+ " 	gl_FragColor = vec4(0, 0, 0, 0);\n" //
 				+ " }\n" //

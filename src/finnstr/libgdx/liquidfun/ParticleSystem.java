@@ -311,8 +311,6 @@ public class ParticleSystem {
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		int32 count = system->GetParticleCount();
 		
-		jfloatArray array;
-		
 		for(int i = 0; i < count * 2; i += 2) {
 			buffer[i] = system->GetPositionBuffer()[i / 2].x;
 			buffer[i + 1] = system->GetPositionBuffer()[i / 2].y;
@@ -326,6 +324,34 @@ public class ParticleSystem {
 	private native long jniGetParticlePositionBufferAddress(long addr); /*
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		return (jlong) &system->GetPositionBuffer()->x;
+	*/
+	
+	private float[] positionAndColorBufferArray = new float[0];
+	
+	public float[] getParticlePositionAndColorBufferArray(boolean update) {
+		if(!update) return positionAndColorBufferArray;
+		int particleCount = getParticleCount();
+		
+		if(positionAndColorBufferArray.length != particleCount * 6) {
+			positionAndColorBufferArray = new float[particleCount * 6];
+		}
+		
+		jniUpdateParticlePositionAndColorBuffer(addr, positionAndColorBufferArray);
+		return positionAndColorBufferArray;
+	}
+	
+	private native void jniUpdateParticlePositionAndColorBuffer(long addr, float[] buffer); /*
+		b2ParticleSystem* system = (b2ParticleSystem*)addr;
+		int32 count = system->GetParticleCount();
+		
+		for(int i = 0; i < count; i++) {
+			buffer[i * 6] = system->GetPositionBuffer()[i].x;
+			buffer[i * 6 + 1] = system->GetPositionBuffer()[i].y;
+			buffer[i * 6 + 2] = system->GetColorBuffer()[i].r / 255.0;
+			buffer[i * 6 + 3] = system->GetColorBuffer()[i].g / 255.0;
+			buffer[i * 6 + 4] = system->GetColorBuffer()[i].b / 255.0;
+			buffer[i * 6 + 5] = system->GetColorBuffer()[i].a / 255.0;
+		}
 	*/
 	
 	private final static Array<Vector2> mVelocities = new Array<Vector2>();
