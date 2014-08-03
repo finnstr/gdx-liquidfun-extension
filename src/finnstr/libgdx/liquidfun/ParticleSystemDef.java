@@ -2,6 +2,24 @@ package finnstr.libgdx.liquidfun;
 
 public class ParticleSystemDef {
 
+	/** Enable strict Particle/Body contact check.
+	* See SetStrictContactCheck for details. */
+	public boolean strictContactCheck;
+	
+	/** Set the particle density.
+	* See SetDensity for details. */
+	public float density;
+	
+	/** Change the particle gravity scale. Adjusts the effect of the global
+	* gravity vector on particles. Default value is 1.0f. */
+	public float gravityScale;
+	
+	/** Set the maximum number of particles.
+	* By default, there is no maximum. The particle buffers can continue to
+	* grow while b2World's block allocator still has memory.
+	* See SetMaxParticleCount for details. */
+	public int maxCount;
+	
 	/** Particles behave as circles with this radius. In Box2D units. */
 	public float radius = 1.0f;
 

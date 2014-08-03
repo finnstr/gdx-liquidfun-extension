@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     finnstr_libgdx_liquidfun_ParticleSystem
  * Method:    jniCreateParticleSystem
- * Signature: (JFFFFFFFFFFFFFIFZF)J
+ * Signature: (JFFFFFFFFFFFFFIFZFZFFI)J
  */
 JNIEXPORT jlong JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniCreateParticleSystem
-  (JNIEnv *, jobject, jlong, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jint, jfloat, jboolean, jfloat);
+  (JNIEnv *, jobject, jlong, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jint, jfloat, jboolean, jfloat, jboolean, jfloat, jfloat, jint);
 
 /*
  * Class:     finnstr_libgdx_liquidfun_ParticleSystem
@@ -158,6 +158,14 @@ JNIEXPORT jintArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetP
  */
 JNIEXPORT jintArray JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniGetParticleColorBufferA
   (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     finnstr_libgdx_liquidfun_ParticleSystem
+ * Method:    jniCalculateReasonableParticleIterations
+ * Signature: (JF)I
+ */
+JNIEXPORT jint JNICALL Java_finnstr_libgdx_liquidfun_ParticleSystem_jniCalculateReasonableParticleIterations
+  (JNIEnv *, jobject, jlong, jfloat);
 
 /*
  * Class:     finnstr_libgdx_liquidfun_ParticleSystem

@@ -58,6 +58,7 @@ LOCAL_SRC_FILES := Box2D/Collision/b2BroadPhase.cpp\
 	Box2D/Dynamics/Joints/b2WeldJoint.cpp\
 	Box2D/Dynamics/Joints/b2WheelJoint.cpp\
 	Box2D/Particle/b2Particle.cpp\
+	Box2D/Particle/b2ParticleAssembly.cpp\
 	Box2D/Particle/b2ParticleGroup.cpp\
 	Box2D/Particle/b2ParticleSystem.cpp\
 	Box2D/Particle/b2VoronoiDiagram.cpp\

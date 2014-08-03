@@ -40,7 +40,7 @@ public class ParticleSystem {
 			pDef.surfaceTensionPressureStrength, pDef.surfaceTensionNormalStrength, pDef.repulsiveStrength,
 			pDef.powderStrength, pDef.ejectionStrength, pDef.staticPressureStrength, 
 			pDef.staticPressureRelaxation, pDef.staticPressureIterations, pDef.colorMixingStrength, pDef.destroyByAge,
-			pDef.lifetimeGranularity);
+			pDef.lifetimeGranularity, pDef.strictContactCheck, pDef.density, pDef.gravityScale, pDef.maxCount);
 	}
 	
 	private native long jniCreateParticleSystem(long worldAddr, float radius, float pressureStrength, 
@@ -48,7 +48,7 @@ public class ParticleSystem {
 		float surfaceTensionPressureStrength, float surfaceTensionNormalStrength, float repulsiveStrength,
 		float powderStrength, float ejectionStrength, float staticPressureStrength, 
 		float staticPressureRelaxation, int staticPressureIterations, float colorMixingStrength, boolean destroyByAge,
-		float lifetimeGranularity); /*
+		float lifetimeGranularity, boolean strictContactCheck, float density, float gravityScale, int maxCount); /*
 		b2ParticleSystemDef def;
 		def.radius = radius;
 		def.pressureStrength = pressureStrength;
@@ -67,6 +67,10 @@ public class ParticleSystem {
 		def.colorMixingStrength = colorMixingStrength;
 		def.destroyByAge = destroyByAge;
 		def.lifetimeGranularity = lifetimeGranularity;
+		def.strictContactCheck = strictContactCheck;
+		def.density = density;
+		def.gravityScale = gravityScale;
+		def.maxCount = maxCount;
 		
 		b2World* world = (b2World*)worldAddr;
 		return (jlong)world->CreateParticleSystem(&def);
@@ -527,6 +531,15 @@ public class ParticleSystem {
 	public Array<Color> getParticleColorBufferWithoutUpdate() {
 		return mColors;
 	}
+	
+	public int calculateReasonableParticleIterations(float timeStep) {
+		return jniCalculateReasonableParticleIterations(mWorld.getAddress(), timeStep);
+	}
+	
+	private native int jniCalculateReasonableParticleIterations(long worldAddr, float timeStep); /*
+		b2World* world = (b2World*)worldAddr;
+		return (jint)world->CalculateReasonableParticleIterations(timeStep);
+	*/
 	
 	public void setParticleRadius(float pRadius) {
 		jniSetParticleRadius(addr, pRadius);
