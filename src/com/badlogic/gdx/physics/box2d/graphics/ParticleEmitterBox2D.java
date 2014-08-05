@@ -28,6 +28,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 
+import finnstr.libgdx.liquidfun.ParticleSystem;
+
 /** @author kalle_h
  * 
  *         ParticleEmitterBox2D use box2d rayCast:ing to achieve continuous collision detection against box2d fixtures. If
@@ -51,6 +53,16 @@ public class ParticleEmitterBox2D extends ParticleEmitter {
 			ParticleEmitterBox2D.this.particleCollided = true;
 			ParticleEmitterBox2D.this.normalAngle = MathUtils.atan2(normal.y, normal.x) * MathUtils.radiansToDegrees;
 			return fraction;
+		}
+
+		@Override
+		public float reportRayParticle (ParticleSystem system, int index, Vector2 point, Vector2 normal, float fraction) {
+			return 0;
+		}
+
+		@Override
+		public boolean shouldQueryParticleSystem (ParticleSystem system) {
+			return false;
 		}
 	};
 

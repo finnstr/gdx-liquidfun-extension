@@ -26,14 +26,14 @@ public class ParticleSystem {
 	};
 	
 	private final long addr;
-	private final World mWorld;
+	private final World world;
 	
 	/** all known particleGroups **/
 	protected final LongMap<ParticleGroup> particleGroups = new LongMap<ParticleGroup>(100);
 	
 	public ParticleSystem(World pWorld, ParticleSystemDef pDef) {	
 		long worldAddr = pWorld.getAddress();
-		mWorld = pWorld;
+		world = pWorld;
 		
 		addr = jniCreateParticleSystem(worldAddr, pDef.radius, pDef.pressureStrength, 
 			pDef.dampingStrength, pDef.elasticStrength, pDef.springStrength, pDef.viscousStrength,
@@ -41,6 +41,8 @@ public class ParticleSystem {
 			pDef.powderStrength, pDef.ejectionStrength, pDef.staticPressureStrength, 
 			pDef.staticPressureRelaxation, pDef.staticPressureIterations, pDef.colorMixingStrength, pDef.destroyByAge,
 			pDef.lifetimeGranularity, pDef.strictContactCheck, pDef.density, pDef.gravityScale, pDef.maxCount);
+		
+		world.particleSystems.put(addr, this);
 	}
 	
 	private native long jniCreateParticleSystem(long worldAddr, float radius, float pressureStrength, 
@@ -77,7 +79,8 @@ public class ParticleSystem {
 	*/
 	
 	public void destroyParticleSystem() {
-		jniDestroyParticleSystem(mWorld.getAddress(), addr);
+		jniDestroyParticleSystem(world.getAddress(), addr);
+		world.particleSystems.remove(addr);
 	}
 	
 	private native void jniDestroyParticleSystem(long worldAddr, long systemAddr); /*
@@ -533,7 +536,7 @@ public class ParticleSystem {
 	}
 	
 	public int calculateReasonableParticleIterations(float timeStep) {
-		return jniCalculateReasonableParticleIterations(mWorld.getAddress(), timeStep);
+		return jniCalculateReasonableParticleIterations(world.getAddress(), timeStep);
 	}
 	
 	private native int jniCalculateReasonableParticleIterations(long worldAddr, float timeStep); /*
@@ -673,7 +676,7 @@ public class ParticleSystem {
 	*/
 	
 	public String getVersionString() {
-		return jniGetVersionString(mWorld.getAddress());
+		return jniGetVersionString(world.getAddress());
 	}
 
 	private native String jniGetVersionString(long worldAddr); /*

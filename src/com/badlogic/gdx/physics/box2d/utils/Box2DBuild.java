@@ -10,7 +10,7 @@ import com.badlogic.gdx.jnigen.BuildTarget.TargetOs;
 
 public class Box2DBuild {
 	public static void main(String[] args) throws Exception {
-		BuildTarget win32 = BuildTarget.newDefaultTarget(TargetOs.Windows, false);
+		BuildTarget win32 = BuildTarget.newDefaultTarget(TargetOs.Windows, false); win32.compilerPrefix = "mingw32-";
 		BuildTarget win64 = BuildTarget.newDefaultTarget(TargetOs.Windows, true);
 		BuildTarget lin32 = BuildTarget.newDefaultTarget(TargetOs.Linux, false);
 		BuildTarget lin64 = BuildTarget.newDefaultTarget(TargetOs.Linux, true);

@@ -16,6 +16,10 @@
 
 package com.badlogic.gdx.physics.box2d;
 
+import finnstr.libgdx.liquidfun.ParticleBodyContact;
+import finnstr.libgdx.liquidfun.ParticleContact;
+import finnstr.libgdx.liquidfun.ParticleSystem;
+
 public interface ContactListener {
 	/** Called when two fixtures begin to touch. */
 	public void beginContact (Contact contact);
@@ -23,6 +27,18 @@ public interface ContactListener {
 	/** Called when two fixtures cease to touch. */
 	public void endContact (Contact contact);
 
+	/** Called when a particle and a fixture begin to touch. */
+	public void beginParticleBodyContact(ParticleSystem system, ParticleBodyContact contact);
+	
+	/** Called when a particle and a fixture cease to touch. */
+	public void endParticleBodyContact(Fixture fixture, ParticleSystem system, int index);
+	
+	/** Called when two particles begin to touch. */
+	public void beginParticleContact(ParticleSystem system, ParticleContact contact);
+	
+	/** Called when two particles cease to touch. */
+	public void endParticleContact(ParticleSystem system, int indexA, int indexB);
+	
 	/*
 	 * This is called after a contact is updated. This allows you to inspect a contact before it goes to the solver. If you are
 	 * careful, you can modify the contact manifold (e.g. disable contact). A copy of the old manifold is provided so that you can

@@ -86,6 +86,8 @@ LOCAL_SRC_FILES := Box2D/Collision/b2BroadPhase.cpp\
 	com.badlogic.gdx.physics.box2d.PolygonShape.cpp\
 	com.badlogic.gdx.physics.box2d.Shape.cpp\
 	com.badlogic.gdx.physics.box2d.World.cpp\
+	finnstr.libgdx.liquidfun.ParticleBodyContact.cpp\
+	finnstr.libgdx.liquidfun.ParticleContact.cpp\
 	finnstr.libgdx.liquidfun.ParticleGroup.cpp\
 	finnstr.libgdx.liquidfun.ParticleSystem.cpp\
 	memcpy_wrap.c

@@ -4,21 +4,21 @@ public class ParticleSystemDef {
 
 	/** Enable strict Particle/Body contact check.
 	* See SetStrictContactCheck for details. */
-	public boolean strictContactCheck;
+	public boolean strictContactCheck = false;
 	
 	/** Set the particle density.
 	* See SetDensity for details. */
-	public float density;
+	public float density = 1.0f;
 	
 	/** Change the particle gravity scale. Adjusts the effect of the global
 	* gravity vector on particles. Default value is 1.0f. */
-	public float gravityScale;
+	public float gravityScale = 1.0f;
 	
 	/** Set the maximum number of particles.
 	* By default, there is no maximum. The particle buffers can continue to
 	* grow while b2World's block allocator still has memory.
 	* See SetMaxParticleCount for details. */
-	public int maxCount;
+	public int maxCount = 0;
 	
 	/** Particles behave as circles with this radius. In Box2D units. */
 	public float radius = 1.0f;

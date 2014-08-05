@@ -48,6 +48,10 @@ import com.badlogic.gdx.utils.LongMap;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
+import finnstr.libgdx.liquidfun.ParticleBodyContact;
+import finnstr.libgdx.liquidfun.ParticleContact;
+import finnstr.libgdx.liquidfun.ParticleSystem;
+
 /** The world class manages all physics entities, dynamic simulation, and asynchronous queries. The world also contains efficient
  * memory management facilities.
  * @author mzechner */
@@ -60,10 +64,18 @@ static jclass worldClass = 0;
 static jmethodID shouldCollideID = 0;
 static jmethodID beginContactID = 0;
 static jmethodID endContactID = 0;
+static jmethodID beginParticleBodyContactID = 0;
+static jmethodID endParticleBodyContactID = 0;
+static jmethodID beginParticleContactID = 0;
+static jmethodID endParticleContactID = 0;
 static jmethodID preSolveID = 0;
 static jmethodID postSolveID = 0;
 static jmethodID reportFixtureID = 0;
+static jmethodID reportParticleID = 0;
+static jmethodID shouldQueryParticleSystemID = 0;
 static jmethodID reportRayFixtureID = 0;
+static jmethodID reportRayParticleID = 0;
+static jmethodID rayShouldQueryParticleSystemID = 0;
 
 class CustomRayCastCallback: public b2RayCastCallback
 {
@@ -82,6 +94,18 @@ public:
 	{
 		return env->CallFloatMethod(obj, reportRayFixtureID, (jlong)fixture, (jfloat)point.x, (jfloat)point.y,
 																(jfloat)normal.x, (jfloat)normal.y, (jfloat)fraction );
+	}
+	
+	virtual float32 ReportParticle(const b2ParticleSystem* particleSystem, int32 index, const b2Vec2& point,
+								   												const b2Vec2& normal, float32 fraction)
+	{
+		return env->CallFloatMethod(obj, reportRayParticleID, (jlong) particleSystem, (jint) index, (jfloat) point.x, (jfloat) point.y,
+																(jfloat)normal.x, (jfloat)normal.y, (jfloat)fraction );
+	}
+	
+	virtual bool ShouldQueryParticleSystem(const b2ParticleSystem* particleSystem)
+	{
+		return env->CallBooleanMethod(obj, rayShouldQueryParticleSystemID, (jlong) particleSystem );
 	}
 };
 
@@ -134,6 +158,34 @@ public:
 				env->CallVoidMethod(obj, endContactID, (jlong)contact);
 		}
 		
+		/// Called when a particle and a fixture begin to touch
+		virtual void BeginContact(b2ParticleSystem* particleSystem, b2ParticleBodyContact* particleBodyContact)
+		{
+			if( beginParticleBodyContactID != 0 )
+				env->CallVoidMethod(obj, beginParticleBodyContactID, (jlong)particleSystem, (jlong)particleBodyContact);
+		}
+		
+		/// Called when a particle and a fixture cease to touch
+		virtual void EndContact(b2Fixture* fixture, b2ParticleSystem* particleSystem, int32 index)
+		{
+			if( endParticleBodyContactID != 0 )
+				env->CallVoidMethod(obj, endParticleBodyContactID, (jlong)fixture, (jlong)particleSystem, index);
+		}
+		
+		/// Called when two particles begin to touch
+		virtual void BeginContact(b2ParticleSystem* particleSystem, b2ParticleContact* particleContact)
+		{
+			if( beginParticleContactID != 0 )
+				env->CallVoidMethod(obj, beginParticleContactID, (jlong)particleSystem, (jlong)particleContact);
+		}
+		
+		/// Called when two particles cease to touch
+		virtual void EndContact(b2ParticleSystem* particleSystem, int32 indexA, int32 indexB)
+		{
+			if( endParticleContactID != 0 )
+				env->CallVoidMethod(obj, endParticleContactID, (jlong)particleSystem, indexA, indexB);
+		}
+		
 		/// This is called after a contact is updated.
 		virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 		{
@@ -165,6 +217,17 @@ public:
 	virtual bool ReportFixture( b2Fixture* fixture )
 	{
 		return env->CallBooleanMethod(obj, reportFixtureID, (jlong)fixture );
+	}
+	
+	virtual bool ReportParticle( const b2ParticleSystem* particleSystem, 
+																			int32 index ) 
+	{
+		return env->CallBooleanMethod(obj, reportParticleID, (jlong) particleSystem, (jint) index);
+	}
+	
+	virtual bool ShouldQueryParticleSystem(const b2ParticleSystem* particleSystem)
+	{
+		return env->CallBooleanMethod(obj, shouldQueryParticleSystemID, (jlong) particleSystem);
 	}
 }; 
 
@@ -207,10 +270,13 @@ b2ContactFilter defaultFilter;
 	private final long addr;
 
 	/** all known bodies **/
-	protected final LongMap<Body> bodies = new LongMap<Body>(100);
+	public final LongMap<Body> bodies = new LongMap<Body>(100);
 
 	/** all known fixtures **/
-	protected final LongMap<Fixture> fixtures = new LongMap<Fixture>(100);
+	public final LongMap<Fixture> fixtures = new LongMap<Fixture>(100);
+	
+	/** all known particlesystems **/
+	public final LongMap<ParticleSystem> particleSystems = new LongMap<ParticleSystem>(100);
 
 	/** all known joints **/
 	protected final LongMap<Joint> joints = new LongMap<Joint>(100);
@@ -240,10 +306,18 @@ b2ContactFilter defaultFilter;
 			worldClass = (jclass)env->NewGlobalRef(env->GetObjectClass(object));
 			beginContactID = env->GetMethodID(worldClass, "beginContact", "(J)V" );
 			endContactID = env->GetMethodID( worldClass, "endContact", "(J)V" );
+			beginParticleBodyContactID = env->GetMethodID( worldClass, "beginParticleBodyContact", "(JJ)V" );
+			endParticleBodyContactID = env->GetMethodID( worldClass, "endParticleBodyContact", "(JJI)V" );
+			beginParticleContactID = env->GetMethodID( worldClass, "beginParticleContact", "(JJ)V");
+			endParticleContactID = env->GetMethodID( worldClass, "endParticleContact", "(JII)V");
 			preSolveID = env->GetMethodID( worldClass, "preSolve", "(JJ)V" );
 			postSolveID = env->GetMethodID( worldClass, "postSolve", "(JJ)V" );
 			reportFixtureID = env->GetMethodID(worldClass, "reportFixture", "(J)Z" );
+			reportParticleID = env->GetMethodID(worldClass, "reportParticle", "(JI)Z");
+			shouldQueryParticleSystemID = env->GetMethodID( worldClass, "shouldQueryParticleSystem", "(J)Z");
 			reportRayFixtureID = env->GetMethodID(worldClass, "reportRayFixture", "(JFFFFF)F" );
+			reportRayParticleID = env->GetMethodID(worldClass, "reportRayParticle", "(JIFFFFF)F" );
+			rayShouldQueryParticleSystemID = env->GetMethodID( worldClass, "rayShouldQueryParticleSystem", "(J)Z");
 			shouldCollideID = env->GetMethodID( worldClass, "contactFilter", "(JJ)Z");
 		}
 	
@@ -647,7 +721,7 @@ b2ContactFilter defaultFilter;
 	private native void jniStep (long addr, float timeStep, int velocityIterations, int positionIterations); /*
 		b2World* world = (b2World*)addr;
 		CustomContactFilter contactFilter(env, object);
-		CustomContactListener contactListener(env,object);
+		CustomContactListener contactListener(env, object);
 		world->SetContactFilter(&contactFilter);
 		world->SetContactListener(&contactListener);
 		world->Step( timeStep, velocityIterations, positionIterations );
@@ -918,6 +992,8 @@ b2ContactFilter defaultFilter;
 	}
 
 	private final Contact contact = new Contact(this, 0);
+	private final ParticleBodyContact particleBodyContact = new ParticleBodyContact(this, 0);
+	private final ParticleContact particleContact = new ParticleContact(this, 0);
 	private final Manifold manifold = new Manifold(0);
 	private final ContactImpulse impulse = new ContactImpulse(this, 0);
 
@@ -929,6 +1005,30 @@ b2ContactFilter defaultFilter;
 	private void endContact (long contactAddr) {
 		contact.addr = contactAddr;
 		if (contactListener != null) contactListener.endContact(contact);
+	}
+	
+	private void beginParticleBodyContact (long particleSystemAddr, long contactAddr) {
+		particleBodyContact.addr = contactAddr;
+		particleBodyContact.particleSystem = this.particleSystems.get(particleSystemAddr);
+		if (contactListener != null) 
+			contactListener.beginParticleBodyContact(particleBodyContact.particleSystem, particleBodyContact);
+	}
+
+	private void endParticleBodyContact (long fixtureAddr, long particleSystemAddr, int index) {
+		if (contactListener != null) 
+			contactListener.endParticleBodyContact(this.fixtures.get(fixtureAddr), this.particleSystems.get(particleSystemAddr), index);
+	}
+	
+	private void beginParticleContact (long particleSystemAddr, long contactAddr) {
+		particleContact.addr = contactAddr;
+		particleContact.particleSystem = this.particleSystems.get(particleSystemAddr);
+		if (contactListener != null) 
+			contactListener.beginParticleContact(particleContact.particleSystem, particleContact);
+	}
+
+	private void endParticleContact (long particleSystemAddr, int indexA, int indexB) {
+		if (contactListener != null) 
+			contactListener.endParticleContact(this.particleSystems.get(particleSystemAddr), indexA, indexB);
 	}
 
 	private void preSolve (long contactAddr, long manifoldAddr) {
@@ -946,6 +1046,20 @@ b2ContactFilter defaultFilter;
 	private boolean reportFixture (long addr) {
 		if (queryCallback != null)
 			return queryCallback.reportFixture(fixtures.get(addr));
+		else
+			return false;
+	}
+	
+	private boolean reportParticle (long particleSystemAddr, int index) {
+		if (queryCallback != null)
+			return queryCallback.reportParticle(this.particleSystems.get(particleSystemAddr), index);
+		else
+			return false;
+	}
+	
+	private boolean shouldQueryParticleSystem(long particleSystemAddr) {
+		if (queryCallback != null)
+			return queryCallback.shouldQueryParticleSystem(this.particleSystems.get(particleSystemAddr));
 		else
 			return false;
 	}
@@ -980,6 +1094,23 @@ b2ContactFilter defaultFilter;
 		} else {
 			return 0.0f;
 		}
+	}
+	
+	private float reportRayParticle(long particleSystemAddr, int index, float pointX, float pointY, 
+		float normalX, float normalY, float fraction) {
+		if(rayCastCallback != null) {
+			rayPoint.x = pointX;
+			rayPoint.y = pointY;
+			rayNormal.x = normalX;
+			rayNormal.y = normalY;
+			return rayCastCallback.reportRayParticle(this.particleSystems.get(particleSystemAddr), index, rayPoint, rayNormal, fraction);
+		} else {
+			return 0.0f;
+		}
+	}
+	
+	private boolean rayShouldQueryParticleSystem(long particleSystem) {
+		return rayCastCallback.shouldQueryParticleSystem(this.particleSystems.get(particleSystem));
 	}
 	
 	public long getAddress() {

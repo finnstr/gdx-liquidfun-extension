@@ -16,9 +16,21 @@
 
 package com.badlogic.gdx.physics.box2d;
 
+import finnstr.libgdx.liquidfun.ParticleSystem;
+
 /** Callback class for AABB queries. */
 public interface QueryCallback {
 	/** Called for each fixture found in the query AABB.
 	 * @return false to terminate the query. */
 	public boolean reportFixture (Fixture fixture);
+	
+	/** Called for each particle found in the query AABB.
+	* @return false to terminate the query. */
+	public boolean reportParticle (ParticleSystem system, int index);
+	
+	/** Cull an entire particle system from b2World::QueryAABB. Ignored for
+	* b2ParticleSystem::QueryAABB.
+	* @return true if you want to include particleSystem in the AABB query,
+	* or false to cull particleSystem from the AABB query. */
+	public boolean shouldQueryParticleSystem(ParticleSystem system);
 }
