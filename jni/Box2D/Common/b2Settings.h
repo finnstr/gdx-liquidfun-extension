@@ -160,9 +160,9 @@ typedef unsigned long long uint64;
 // Particle
 
 /// NEON SIMD requires 16-bit particle indices
-#if !defined(B2_USE_16_BIT_PARTICLE_INDICES) && defined(LIQUIDFUN_SIMD_NEON)
+//#if !defined(B2_USE_16_BIT_PARTICLE_INDICES) && defined(LIQUIDFUN_SIMD_NEON)
 #define B2_USE_16_BIT_PARTICLE_INDICES
-#endif
+//#endif
 
 /// A symbolic constant that stands for particle allocation error.
 #define b2_invalidParticleIndex		(-1)

@@ -27,8 +27,8 @@ public class ParticleGroupDef {
 
 		private int value;
 
-		private ParticleGroupType (int pValue) {
-
+		private ParticleGroupType (int value) {
+			this.value = value;
 		}
 
 		public int getValue () {

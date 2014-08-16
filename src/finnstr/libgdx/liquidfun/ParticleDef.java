@@ -58,8 +58,8 @@ public class ParticleDef {
 
 		private int value;
 
-		private ParticleType (int pValue) {
-			value = pValue;
+		private ParticleType (int value) {
+			this.value = value;
 		}
 
 		public int getValue () {

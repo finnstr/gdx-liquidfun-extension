@@ -31,18 +31,18 @@ public class ParticleSystem {
 	/** all known particleGroups **/
 	protected final LongMap<ParticleGroup> particleGroups = new LongMap<ParticleGroup>(100);
 	
-	public ParticleSystem(World pWorld, ParticleSystemDef pDef) {	
-		long worldAddr = pWorld.getAddress();
-		world = pWorld;
+	public ParticleSystem(World world, ParticleSystemDef def) {	
+		long worldAddr = world.getAddress();
+		this.world = world;
 		
-		addr = jniCreateParticleSystem(worldAddr, pDef.radius, pDef.pressureStrength, 
-			pDef.dampingStrength, pDef.elasticStrength, pDef.springStrength, pDef.viscousStrength,
-			pDef.surfaceTensionPressureStrength, pDef.surfaceTensionNormalStrength, pDef.repulsiveStrength,
-			pDef.powderStrength, pDef.ejectionStrength, pDef.staticPressureStrength, 
-			pDef.staticPressureRelaxation, pDef.staticPressureIterations, pDef.colorMixingStrength, pDef.destroyByAge,
-			pDef.lifetimeGranularity, pDef.strictContactCheck, pDef.density, pDef.gravityScale, pDef.maxCount);
+		addr = jniCreateParticleSystem(worldAddr, def.radius, def.pressureStrength, 
+			def.dampingStrength, def.elasticStrength, def.springStrength, def.viscousStrength,
+			def.surfaceTensionPressureStrength, def.surfaceTensionNormalStrength, def.repulsiveStrength,
+			def.powderStrength, def.ejectionStrength, def.staticPressureStrength, 
+			def.staticPressureRelaxation, def.staticPressureIterations, def.colorMixingStrength, def.destroyByAge,
+			def.lifetimeGranularity, def.strictContactCheck, def.density, def.gravityScale, def.maxCount);
 		
-		world.particleSystems.put(addr, this);
+		this.world.particleSystems.put(addr, this);
 	}
 	
 	private native long jniCreateParticleSystem(long worldAddr, float radius, float pressureStrength, 
@@ -91,31 +91,31 @@ public class ParticleSystem {
 	*/
 	
 	/** @return Returns the index of the particle. */
-	public int createParticle(ParticleDef pDef) {
+	public int createParticle(ParticleDef def) {
 		int flags;
-		if(pDef.flags.size == 0) flags = 0;
+		if(def.flags.size == 0) flags = 0;
 		else {
-			flags = pDef.flags.get(0).getValue();
-			for(int i = 1; i < pDef.flags.size; i++) {
-				flags = ((int)(flags | pDef.flags.get(i).getValue()));
+			flags = def.flags.get(0).getValue();
+			for(int i = 1; i < def.flags.size; i++) {
+				flags = ((int)(flags | def.flags.get(i).getValue()));
 			}
 		}
 		
 		boolean addToGroup = true;
-		if(pDef.group == null) addToGroup = false;
+		if(def.group == null) addToGroup = false;
 		
-		return jniCreateParticle(addr, flags, pDef.position.x, pDef.position.y, pDef.velocitiy.x, pDef.velocitiy.y,
-			(int) (pDef.color.r * 255f), (int) (pDef.color.g * 255f), (int) (pDef.color.b * 255f), (int) (pDef.color.a * 255f),
-			pDef.lifetime, addToGroup, addToGroup ? pDef.group.addr : -1);
+		return jniCreateParticle(addr, flags, def.position.x, def.position.y, def.velocitiy.x, def.velocitiy.y,
+			(int) (def.color.r * 255f), (int) (def.color.g * 255f), (int) (def.color.b * 255f), (int) (def.color.a * 255f),
+			def.lifetime, addToGroup, addToGroup ? def.group.addr : -1);
 	}
 	
-	private native int jniCreateParticle(long addr, int pFlags, float pPositionX, float pPositionY, float pVelocityX, float pVelocityY, 
-			int pColorR, int pColorG, int pColorB, int pColorA, float lifetime, boolean addToGroup, long groupAddr); /*
+	private native int jniCreateParticle(long addr, int flags, float positionX, float positionY, float velocityX, float velocityY, 
+			int colorR, int colorG, int colorB, int colorA, float lifetime, boolean addToGroup, long groupAddr); /*
 		b2ParticleDef particleDef;
-		particleDef.flags = pFlags;
-		particleDef.position.Set( pPositionX, pPositionY );
-		particleDef.velocity.Set( pVelocityX, pVelocityY );
-		particleDef.color.Set(pColorR, pColorG, pColorB, pColorA);
+		particleDef.flags = flags;
+		particleDef.position.Set( positionX, positionY );
+		particleDef.velocity.Set( velocityX, velocityY );
+		particleDef.color.Set(colorR, colorG, colorB, colorA);
 		particleDef.lifetime = lifetime;
 		if(addToGroup) particleDef.group = (b2ParticleGroup*)groupAddr;
 		
@@ -125,23 +125,23 @@ public class ParticleSystem {
 	*/
 
 	/** Removes a particle
-	 * @param pIndex The index of the particle given by createParticle() */
-	public void destroyParticle(int pIndex) {
-		jniDestroyParticle(addr, pIndex);
+	 * @param index The index of the particle given by createParticle() */
+	public void destroyParticle(int index) {
+		jniDestroyParticle(addr, index);
 	}
 	
-	private native void jniDestroyParticle(long addr, int pIndex); /*
+	private native void jniDestroyParticle(long addr, int index); /*
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
-		system->DestroyParticle( pIndex, false );
+		system->DestroyParticle( index, false );
 	*/
 	
 	/** Destroy the Nth oldest particle in the system.
 	* The particle is removed after the next b2World::Step().
-	* @param pIndex of the Nth oldest particle to destroy, 0 will destroy the
+	* @param index of the Nth oldest particle to destroy, 0 will destroy the
 	* oldest particle in the system, 1 will destroy the next oldest
 	* particle etc. */
-	public void destroyOldestParticle(int pIndex) {
-		jniDestroyOldestParticle(addr, pIndex);
+	public void destroyOldestParticle(int index) {
+		jniDestroyOldestParticle(addr, index);
 	}
 	
 	private native void jniDestroyOldestParticle(long addr, int index); /*
@@ -150,55 +150,55 @@ public class ParticleSystem {
 	*/
 	
 	/** Removes all particles in the bounds of the shape
-	 * @param pShape
-	 * @param pTransform transformation of the shape
+	 * @param shape
+	 * @param transform transformation of the shape
 	 * @return the number of particles destroyed*/
-	public int destroyParticleInShape(Shape pShape, Transform pTransform) {
-		return jniDestroyParticleInShape(addr, pShape.getAddress(), pTransform.getPosition().x, pTransform.getPosition().y, pTransform.getRotation());
+	public int destroyParticleInShape(Shape shape, Transform transform) {
+		return jniDestroyParticleInShape(addr, shape.getAddress(), transform.getPosition().x, transform.getPosition().y, transform.getRotation());
 	}
 	
-	private native int jniDestroyParticleInShape(long addr, long pShapeAddr, float pTransformPosX, float pTransformPosY, float pAngle); /*
-		b2Shape* shape = (b2Shape*)pShapeAddr;
+	private native int jniDestroyParticleInShape(long addr, long shapeAddr, float transformPosX, float transformPosY, float angle); /*
+		b2Shape* shape = (b2Shape*)shapeAddr;
 		b2Transform transform;
-		transform.Set( b2Vec2( pTransformPosX, pTransformPosY ), pAngle );
+		transform.Set( b2Vec2( transformPosX, transformPosY ), angle );
 		
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
 		return (jint)system->DestroyParticlesInShape( *shape, transform, false );
 	*/
 
-	public ParticleGroup createParticleGroup(ParticleGroupDef pGroupDef) {
+	public ParticleGroup createParticleGroup(ParticleGroupDef groupDef) {
 		int flags;
-		if(pGroupDef.flags.size == 0) flags = 0;
+		if(groupDef.flags.size == 0) flags = 0;
 		else {
-			flags = pGroupDef.flags.get(0).getValue();
-			for(int i = 1; i < pGroupDef.flags.size; i++) {
-				flags = ((int)(flags | pGroupDef.flags.get(i).getValue()));
+			flags = groupDef.flags.get(0).getValue();
+			for(int i = 1; i < groupDef.flags.size; i++) {
+				flags = ((int)(flags | groupDef.flags.get(i).getValue()));
 			}
 		}
 		
 		int groupFlags;
-		if(pGroupDef.groupFlags.size == 0) groupFlags = 0;
+		if(groupDef.groupFlags.size == 0) groupFlags = 0;
 		else {
-			groupFlags = pGroupDef.groupFlags.get(0).getValue();
-			for(int i = 1; i < pGroupDef.groupFlags.size; i++) {
-				flags = ((int)(flags | pGroupDef.groupFlags.get(i).getValue()));
+			groupFlags = groupDef.groupFlags.get(0).getValue();
+			for(int i = 1; i < groupDef.groupFlags.size; i++) {
+				flags = ((int)(flags | groupDef.groupFlags.get(i).getValue()));
 			}
 		}
 		
 		float positionDataX = 0;
 		float positionDataY = 0;
-		boolean positionDataSet = pGroupDef.positionData != null;
+		boolean positionDataSet = groupDef.positionData != null;
 		if(positionDataSet) {
-			positionDataX = pGroupDef.positionData.x;
-			positionDataY = pGroupDef.positionData.y;
+			positionDataX = groupDef.positionData.x;
+			positionDataY = groupDef.positionData.y;
 		}
 		
-		long addrParticleGroup = jniCreateParticleGroup(addr, flags, groupFlags, pGroupDef.position.x, pGroupDef.position.y, pGroupDef.angle,
-				pGroupDef.linearVelocity.x, pGroupDef.linearVelocity.y, pGroupDef.angularVelocity, 
-				(int) (pGroupDef.color.r * 255f), (int) (pGroupDef.color.g * 255f), 
-				(int) (pGroupDef.color.b * 255f), (int) (pGroupDef.color.a * 255f),
-				pGroupDef.strength, pGroupDef.shape.getAddress(), pGroupDef.stride, pGroupDef.particleCount, positionDataSet,
-				positionDataX, positionDataY, pGroupDef.lifetime, pGroupDef.group == null ? -1 : pGroupDef.group.addr);
+		long addrParticleGroup = jniCreateParticleGroup(addr, flags, groupFlags, groupDef.position.x, groupDef.position.y, groupDef.angle,
+				groupDef.linearVelocity.x, groupDef.linearVelocity.y, groupDef.angularVelocity, 
+				(int) (groupDef.color.r * 255f), (int) (groupDef.color.g * 255f), 
+				(int) (groupDef.color.b * 255f), (int) (groupDef.color.a * 255f),
+				groupDef.strength, groupDef.shape.getAddress(), groupDef.stride, groupDef.particleCount, positionDataSet,
+				positionDataX, positionDataY, groupDef.lifetime, groupDef.group == null ? -1 : groupDef.group.addr);
 		
 		ParticleGroup group = freeParticleGroups.obtain();
 		group.addr = addrParticleGroup;
@@ -206,21 +206,21 @@ public class ParticleSystem {
 		return group;
 	}
 	
-	private native long jniCreateParticleGroup(long addr, int pFlags, int pGroupFlags, float pPositionX, 
-		float pPositionY, float pAngle, float pLinVelocityX, float pLinVelocityY, 
-		float pAngularVelocity, int pColorR, int pColorG, int pColorB, int pColorA, 
-		float pStrength, long pShapeAddr, float stride, int particleCount, boolean positionDataSet, 
+	private native long jniCreateParticleGroup(long addr, int flags, int groupFlags, float positionX, 
+		float positionY, float angle, float linVelocityX, float linVelocityY, 
+		float angularVelocity, int colorR, int colorG, int colorB, int colorA, 
+		float strength, long shapeAddr, float stride, int particleCount, boolean positionDataSet, 
 		float positionDataX, float positionDataY, float lifetime, long groupAddr); /*
 		b2ParticleGroupDef groupDef;
-		groupDef.flags = pFlags;
-		groupDef.groupFlags = pGroupFlags;
-		groupDef.position.Set( pPositionX, pPositionY );
-		groupDef.angle = pAngle;
-		groupDef.linearVelocity.Set( pLinVelocityX, pLinVelocityY );
-		groupDef.angularVelocity = pAngularVelocity;
-		groupDef.color.Set( pColorR, pColorG, pColorB, pColorA );
-		groupDef.strength = pStrength;
-		groupDef.shape = (b2Shape*)pShapeAddr;
+		groupDef.flags = flags;
+		groupDef.groupFlags = groupFlags;
+		groupDef.position.Set( positionX, positionY );
+		groupDef.angle = angle;
+		groupDef.linearVelocity.Set( linVelocityX, linVelocityY );
+		groupDef.angularVelocity = angularVelocity;
+		groupDef.color.Set( colorR, colorG, colorB, colorA );
+		groupDef.strength = strength;
+		groupDef.shape = (b2Shape*) shapeAddr;
 		groupDef.stride = stride;
 		groupDef.particleCount = particleCount;
 		groupDef.lifetime = lifetime;
@@ -239,10 +239,10 @@ public class ParticleSystem {
 	*/
 	
 	/** Join two particle groups. This function is locked during callbacks.
-	 * @param pGroupA first group. Expands to encompass the second group.
-	 * @param pGroupB second group. It is destroyed. */
-	public void joinParticleGroups(ParticleGroup pGroupA, ParticleGroup pGroupB) {
-		jniJoinParticleGroups(addr, pGroupA.addr, pGroupB.addr);
+	 * @param groupA first group. Expands to encompass the second group.
+	 * @param groupB second group. It is destroyed. */
+	public void joinParticleGroups(ParticleGroup groupA, ParticleGroup groupB) {
+		jniJoinParticleGroups(addr, groupA.addr, groupB.addr);
 	}
 	
 	private native void jniJoinParticleGroups(long addr, long addrA, long addrB); /*
@@ -544,13 +544,13 @@ public class ParticleSystem {
 		return (jint)world->CalculateReasonableParticleIterations(timeStep);
 	*/
 	
-	public void setParticleRadius(float pRadius) {
-		jniSetParticleRadius(addr, pRadius);
+	public void setParticleRadius(float radius) {
+		jniSetParticleRadius(addr, radius);
 	}
 	
-	private native void jniSetParticleRadius(long addr, float pRadius); /*
+	private native void jniSetParticleRadius(long addr, float radius); /*
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
-		system->SetRadius( pRadius );
+		system->SetRadius( radius );
 	*/
 	
 	public float getParticleRadius() {
@@ -584,9 +584,9 @@ public class ParticleSystem {
 	/** Pause or unpause the particle system. When paused, b2World::Step()
 	* skips over this particle system. All b2ParticleSystem function calls
 	* still work.
-	* @param pPaused is true to pause, false to un-pause. */
-	public void setPaused(boolean pPaused) {
-		jniSetPaused(addr, pPaused);
+	* @param paused is true to pause, false to un-pause. */
+	public void setPaused(boolean paused) {
+		jniSetPaused(addr, paused);
 	}
 	
 	private native void jniSetPaused(long addr, boolean paused); /*
@@ -603,13 +603,13 @@ public class ParticleSystem {
 		return (jboolean)system->GetPaused();
 	*/
 	
-	public void setParticleDensity(float pDensity) {
-		jniSetParticleDensity(addr, pDensity);
+	public void setParticleDensity(float density) {
+		jniSetParticleDensity(addr, density);
 	}
 	
-	private native void jniSetParticleDensity(long addr, float pDensity); /*
+	private native void jniSetParticleDensity(long addr, float density); /*
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
-		system->SetDensity(pDensity);
+		system->SetDensity(density);
 	*/
 	
 	public float getParticleDensity() {
@@ -621,13 +621,13 @@ public class ParticleSystem {
 		return (jfloat)system->GetDensity();
 	*/
 	
-	public void setParticleGravityScale(float pGravityScale) {
-		jniSetParticleGravityScale(addr, pGravityScale);
+	public void setParticleGravityScale(float gravityScale) {
+		jniSetParticleGravityScale(addr, gravityScale);
 	}
 	
-	private native void jniSetParticleGravityScale(long addr, float pGravityScale); /*
+	private native void jniSetParticleGravityScale(long addr, float gravityScale); /*
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
-		system->SetGravityScale(pGravityScale);
+		system->SetGravityScale(gravityScale);
 	*/
 	
 	public float getParticleGravityScale() {
@@ -639,13 +639,13 @@ public class ParticleSystem {
 		return (jfloat)system->GetGravityScale();
 	*/
 	
-	public void setParticleMaxCount(int pCount) {
-		jniSetParticleMaxCount(addr, pCount);
+	public void setParticleMaxCount(int count) {
+		jniSetParticleMaxCount(addr, count);
 	}
 	
-	private native void jniSetParticleMaxCount(long addr, float pCount); /*
+	private native void jniSetParticleMaxCount(long addr, float count); /*
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
-		system->SetMaxParticleCount(pCount);
+		system->SetMaxParticleCount(count);
 	*/
 	
 	public float getMaxParticleCount() {
@@ -657,13 +657,13 @@ public class ParticleSystem {
 		return (jint)system->GetMaxParticleCount();
 	*/
 	
-	public void setParticleDamping(float pDamping) {
-		jniSetParticleDamping(addr, pDamping);
+	public void setParticleDamping(float damping) {
+		jniSetParticleDamping(addr, damping);
 	}
 	
-	private native void jniSetParticleDamping(long addr, float pDamping); /*
+	private native void jniSetParticleDamping(long addr, float damping); /*
 		b2ParticleSystem* system = (b2ParticleSystem*)addr;
-		system->SetDamping(pDamping);
+		system->SetDamping(damping);
 	*/
 	
 	public float getParticleDamping() {
@@ -671,7 +671,7 @@ public class ParticleSystem {
 	}
 	
 	private native float jniGetParticleDamping(long addr); /*
-		b2ParticleSystem* system = (b2ParticleSystem*)addr;
+		b2ParticleSystem* system = (b2ParticleSystem*) addr;
 		return (jfloat)system->GetDamping();
 	*/
 	

@@ -14,20 +14,21 @@ import com.badlogic.gdx.math.Matrix4;
  * @author FinnStr */
 public class ParticleDebugRenderer {
 
-	protected ShaderProgram mShader;
-	protected Mesh mMesh;
+	protected ShaderProgram shader;
+	protected Mesh mesh;
 	
-	public ParticleDebugRenderer(Color pColor, int pMaxParticleNumber) {
-		mShader = createShader(pColor);
+	public ParticleDebugRenderer(Color color, int maxParticleNumber) {
+		shader = createShader(color);
+		setMaxParticleNumber(maxParticleNumber);
 	}
 
 	public void setMaxParticleNumber(int pCount) {
-		if(mMesh != null) mMesh.dispose();
-		mMesh = new Mesh(false, pCount, pCount, new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE));
+		if(mesh != null) mesh.dispose();
+		mesh = new Mesh(false, pCount, pCount, new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE));
 	}
 	
 	public int getMaxParticleNumber() {
-		return mMesh.getMaxVertices();
+		return mesh.getMaxVertices();
 	}
 	
 	public void render (ParticleSystem pSystem, float pRadiusScale, Matrix4 pProjMatrix) {
@@ -36,20 +37,20 @@ public class ParticleDebugRenderer {
 		Gdx.gl20.glEnable(GL20.GL_VERTEX_PROGRAM_POINT_SIZE);
 		Gdx.gl20.glEnable(0x8861); //GL11.GL_POINT_SPRITE_OES
 		
-		mShader.begin();
-		mShader.setUniformf("particlesize", pSystem.getParticleRadius());
-		mShader.setUniformf("scale", pRadiusScale);
-		mShader.setUniformMatrix("u_projTrans", pProjMatrix);
+		shader.begin();
+		shader.setUniformf("particlesize", pSystem.getParticleRadius());
+		shader.setUniformf("scale", pRadiusScale);
+		shader.setUniformMatrix("u_projTrans", pProjMatrix);
 		
-		mMesh.setVertices(pSystem.getParticlePositionBufferArray(true));
-		mMesh.render(mShader, GL20.GL_POINTS, 0, pSystem.getParticleCount());
-		mShader.end();
+		mesh.setVertices(pSystem.getParticlePositionBufferArray(true));
+		mesh.render(shader, GL20.GL_POINTS, 0, pSystem.getParticleCount());
+		shader.end();
 		Gdx.gl20.glDisable(0x8861);
 	}
 	
 	public void dispose() {
-		mShader.dispose();
-		mMesh.dispose();
+		shader.dispose();
+		mesh.dispose();
 	}
 	
 	static final public ShaderProgram createShader(Color pColor) {

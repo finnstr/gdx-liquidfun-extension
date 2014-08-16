@@ -15,8 +15,8 @@ public class ParticleGroup {
 	
 	private Object userData;
 	
-	protected ParticleGroup(long pAddr) {
-		addr = pAddr;
+	protected ParticleGroup(long addr) {
+		this.addr = addr;
 	}
 	
 	public void destroyParticlesInGroup() {
@@ -54,8 +54,8 @@ public class ParticleGroup {
 		return (jint)group->GetGroupFlags();
 	*/
 
-	public void setGroupFlags(int pFlags) {
-		jniSetGroupFlags(addr, pFlags);
+	public void setGroupFlags(int flags) {
+		jniSetGroupFlags(addr, flags);
 	}
 	
 	private native void jniSetGroupFlags(long addr, int pFlags);	/*
@@ -138,8 +138,8 @@ public class ParticleGroup {
 		return (jfloat)group->GetAngle();
 	 */
 	
-	public void applyForce(Vector2 pForce) {
-		jniApplyForce(addr, pForce.x, pForce.y);
+	public void applyForce(Vector2 force) {
+		jniApplyForce(addr, force.x, force.y);
 	}
 	
 	private native void jniApplyForce(long addr, float forceX, float forceY); /*

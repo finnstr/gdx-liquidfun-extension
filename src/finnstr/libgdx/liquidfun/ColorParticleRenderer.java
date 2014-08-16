@@ -13,47 +13,47 @@ import finnstr.libgdx.liquidfun.ParticleSystem;
 
 public class ColorParticleRenderer {
 
-	protected ShaderProgram mShader;
-	protected Mesh mMesh;
+	protected ShaderProgram shader;
+	protected Mesh mesh;
 	
-	public ColorParticleRenderer(Color pColor, int pMaxParticleNumber) {
-		mShader = createShader(pColor);
-		setMaxParticleNumber(pMaxParticleNumber);
+	public ColorParticleRenderer(int maxParticleNumber) {
+		shader = createShader();
+		setMaxParticleNumber(maxParticleNumber);
 	}
 
-	public void setMaxParticleNumber(int pCount) {
-		if(mMesh != null) mMesh.dispose();
-		mMesh = new Mesh(false, pCount, pCount, new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE), 
+	public void setMaxParticleNumber(int count) {
+		if(mesh != null) mesh.dispose();
+		mesh = new Mesh(false, count, count, new VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE), 
 															 new VertexAttribute(Usage.Color, 4, ShaderProgram.COLOR_ATTRIBUTE));
 	}
 	
 	public int getMaxParticleNumber() {
-		return mMesh.getMaxVertices();
+		return mesh.getMaxVertices();
 	}
 	
-	public void render (ParticleSystem pSystem, float pRadiusScale, Matrix4 pProjMatrix) {
+	public void render (ParticleSystem system, float radiusScale, Matrix4 projMatrix) {
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA); 
 		Gdx.gl20.glEnable(GL20.GL_VERTEX_PROGRAM_POINT_SIZE);
 		Gdx.gl20.glEnable(0x8861); //GL11.GL_POINT_SPRITE_OES
 		
-		mShader.begin();
-		mShader.setUniformf("particlesize", pSystem.getParticleRadius());
-		mShader.setUniformf("scale", pRadiusScale);
-		mShader.setUniformMatrix("u_projTrans", pProjMatrix);
+		shader.begin();
+		shader.setUniformf("particlesize", system.getParticleRadius());
+		shader.setUniformf("scale", radiusScale);
+		shader.setUniformMatrix("u_projTrans", projMatrix);
 		
-		mMesh.setVertices(pSystem.getParticlePositionAndColorBufferArray(true));
-		mMesh.render(mShader, GL20.GL_POINTS, 0, pSystem.getParticleCount());
-		mShader.end();
+		mesh.setVertices(system.getParticlePositionAndColorBufferArray(true));
+		mesh.render(shader, GL20.GL_POINTS, 0, system.getParticleCount());
+		shader.end();
 		Gdx.gl20.glDisable(0x8861);
 	}
 	
 	public void dispose() {
-		mShader.dispose();
-		mMesh.dispose();
+		shader.dispose();
+		mesh.dispose();
 	}
 	
-	static final public ShaderProgram createShader(Color pColor) {
+	static final public ShaderProgram createShader() {
 		final String vertexShader = 
 				"attribute vec4 a_position;\n" //
 				+ "\n" //
@@ -83,7 +83,7 @@ public class ColorParticleRenderer {
 				+ " if(len <= 0.5) {\n" //
 				+ " 	gl_FragColor = v_color;\n" //
 				+ " } else {\n" //
-				+ " 	gl_FragColor = vec4(0, 0, 0, 0);\n" //
+				+ " 	gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);\n" //
 				+ " }\n" //
 				+ "}";
 		
