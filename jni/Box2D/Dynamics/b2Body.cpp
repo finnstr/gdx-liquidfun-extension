@@ -105,6 +105,9 @@ b2Body::b2Body(const b2BodyDef* bd, b2World* world)
 
 	m_fixtureList = NULL;
 	m_fixtureCount = 0;
+
+	/// Added by finnstr
+	m_useParticleBodyContactListener = false;
 }
 
 b2Body::~b2Body()

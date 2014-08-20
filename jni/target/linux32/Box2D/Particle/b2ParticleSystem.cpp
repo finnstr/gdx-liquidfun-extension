@@ -2682,6 +2682,10 @@ void b2ParticleSystem::UpdateBodyContacts()
 				contact.normal = -n;
 				contact.mass = invM > 0 ? 1 / invM : 0;
 				m_system->DetectStuckParticle(a);
+
+				/// Added by finnstr
+				if(b->m_useParticleBodyContactListener)
+					m_system->m_world->m_particleBodyContactListener->BeginContact(b, a);
 			}
 		}
 

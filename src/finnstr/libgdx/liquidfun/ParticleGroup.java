@@ -24,7 +24,7 @@ public class ParticleGroup {
 	}
 	
 	private native void jniDestroyParticlesInGroup(long addr); /*
-		b2ParticleGroup* group = (b2ParticleGroup*)addr;
+		b2ParticleGroup* group = (b2ParticleGroup*)addr; 
 		group->DestroyParticles();
 	*/
 	

@@ -265,22 +265,6 @@ JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniDispose
 
 /*
  * Class:     com_badlogic_gdx_physics_box2d_World
- * Method:    setVelocityThreshold
- * Signature: (F)V
- */
-JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_setVelocityThreshold
-  (JNIEnv *, jclass, jfloat);
-
-/*
- * Class:     com_badlogic_gdx_physics_box2d_World
- * Method:    getVelocityThreshold
- * Signature: ()F
- */
-JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_World_getVelocityThreshold
-  (JNIEnv *, jclass);
-
-/*
- * Class:     com_badlogic_gdx_physics_box2d_World
  * Method:    jniRayCast
  * Signature: (JFFFF)V
  */

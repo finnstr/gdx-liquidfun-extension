@@ -383,6 +383,14 @@ JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_Body_jniGetGravityS
 JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_Body_jniSetGravityScale
   (JNIEnv *, jobject, jlong, jfloat);
 
+/*
+ * Class:     com_badlogic_gdx_physics_box2d_Body
+ * Method:    jniSetUseParticleBodyContactListener
+ * Signature: (JZ)V
+ */
+JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_Body_jniSetUseParticleBodyContactListener
+  (JNIEnv *, jobject, jlong, jboolean);
+
 #ifdef __cplusplus
 }
 #endif

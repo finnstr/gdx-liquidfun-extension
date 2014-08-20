@@ -23,6 +23,8 @@
 #include <Box2D/Common/b2Math.h>
 #include <Box2D/Collision/Shapes/b2Shape.h>
 #include <memory>
+/// Added by finnstr
+#include <Box2D/Dynamics/b2WorldCallbacks.h>
 
 class b2Fixture;
 class b2Joint;
@@ -389,6 +391,9 @@ public:
 	/// Dump this body to a log file
 	void Dump();
 
+	/// Added by finnstr
+	void SetUseParticleBodyContactListener(bool use);
+
 #if LIQUIDFUN_EXTERNAL_LANGUAGE_API
 public:
 	/// Get x-coordinate of position.
@@ -486,6 +491,9 @@ private:
 	float32 m_sleepTime;
 
 	void* m_userData;
+
+	/// Added by finnstr
+	bool m_useParticleBodyContactListener;
 };
 
 inline b2BodyType b2Body::GetType() const
@@ -877,6 +885,11 @@ inline b2World* b2Body::GetWorld()
 inline const b2World* b2Body::GetWorld() const
 {
 	return m_world;
+}
+
+inline void b2Body::SetUseParticleBodyContactListener(bool use)
+{
+	m_useParticleBodyContactListener = use;
 }
 
 #if LIQUIDFUN_EXTERNAL_LANGUAGE_API

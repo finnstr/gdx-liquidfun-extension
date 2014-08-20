@@ -273,6 +273,9 @@ public:
 		return m_liquidFunVersionString;
 	}
 
+	/// Added by finnstr
+	b2ParticleBodyContactListener* m_particleBodyContactListener;
+
 #if LIQUIDFUN_EXTERNAL_LANGUAGE_API
 public:
 	/// Constructor which takes direct floats.

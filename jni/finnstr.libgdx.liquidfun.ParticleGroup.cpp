@@ -3,18 +3,18 @@
 //@line:10
 
 #include <Box2D/Box2D.h>
-	JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniDestroyParticlesInGroup(JNIEnv* env, jobject object, jlong addr) {
+	JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniDestroyParticlesInGroup(JNIEnv* env, jobject object, jlong addr) {
 
 
 //@line:26
 
-		b2ParticleGroup* group = (b2ParticleGroup*)addr;
+		b2ParticleGroup* group = (b2ParticleGroup*)addr; 
 		group->DestroyParticles();
 	
 
 }
 
-JNIEXPORT jint JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniGetBufferIndex(JNIEnv* env, jobject object, jlong addr) {
+JNIEXPORT jint JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetBufferIndex(JNIEnv* env, jobject object, jlong addr) {
 
 
 //@line:43
@@ -25,7 +25,7 @@ JNIEXPORT jint JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGro
 
 }
 
-JNIEXPORT jint JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniGetGroupFlags(JNIEnv* env, jobject object, jlong addr) {
+JNIEXPORT jint JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetGroupFlags(JNIEnv* env, jobject object, jlong addr) {
 
 
 //@line:52
@@ -36,7 +36,7 @@ JNIEXPORT jint JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGro
 
 }
 
-JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniSetGroupFlags(JNIEnv* env, jobject object, jlong addr, jint pFlags) {
+JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniSetGroupFlags(JNIEnv* env, jobject object, jlong addr, jint pFlags) {
 
 
 //@line:61
@@ -47,7 +47,7 @@ JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGro
 
 }
 
-JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniGetMass(JNIEnv* env, jobject object, jlong addr) {
+JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetMass(JNIEnv* env, jobject object, jlong addr) {
 
 
 //@line:70
@@ -58,7 +58,7 @@ JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleG
 
 }
 
-JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniGetInertia(JNIEnv* env, jobject object, jlong addr) {
+JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetInertia(JNIEnv* env, jobject object, jlong addr) {
 
 
 //@line:79
@@ -69,7 +69,7 @@ JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleG
 
 }
 
-JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniGetCenterX(JNIEnv* env, jobject object, jlong addr) {
+JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetCenterX(JNIEnv* env, jobject object, jlong addr) {
 
 
 //@line:88
@@ -80,7 +80,7 @@ JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleG
 
 }
 
-JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniGetCenterY(JNIEnv* env, jobject object, jlong addr) {
+JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetCenterY(JNIEnv* env, jobject object, jlong addr) {
 
 
 //@line:92
@@ -91,7 +91,7 @@ JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleG
 
 }
 
-JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniGetLinVelocityX(JNIEnv* env, jobject object, jlong addr) {
+JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetLinVelocityX(JNIEnv* env, jobject object, jlong addr) {
 
 
 //@line:101
@@ -102,7 +102,7 @@ JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleG
 
 }
 
-JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniGetLinVelocityY(JNIEnv* env, jobject object, jlong addr) {
+JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetLinVelocityY(JNIEnv* env, jobject object, jlong addr) {
 
 
 //@line:105
@@ -113,7 +113,7 @@ JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleG
 
 }
 
-JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniGetAngularVelocity(JNIEnv* env, jobject object, jlong addr) {
+JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetAngularVelocity(JNIEnv* env, jobject object, jlong addr) {
 
 
 //@line:114
@@ -124,7 +124,7 @@ JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleG
 
 }
 
-JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniGetPositionX(JNIEnv* env, jobject object, jlong addr) {
+JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetPositionX(JNIEnv* env, jobject object, jlong addr) {
 
 
 //@line:123
@@ -135,7 +135,7 @@ JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleG
 
 }
 
-JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniGetPositionY(JNIEnv* env, jobject object, jlong addr) {
+JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetPositionY(JNIEnv* env, jobject object, jlong addr) {
 
 
 //@line:127
@@ -146,7 +146,7 @@ JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleG
 
 }
 
-JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniGetAngle(JNIEnv* env, jobject object, jlong addr) {
+JNIEXPORT jfloat JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetAngle(JNIEnv* env, jobject object, jlong addr) {
 
 
 //@line:136
@@ -157,7 +157,7 @@ JNIEXPORT jfloat JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleG
 
 }
 
-JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniApplyForce(JNIEnv* env, jobject object, jlong addr, jfloat forceX, jfloat forceY) {
+JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniApplyForce(JNIEnv* env, jobject object, jlong addr, jfloat forceX, jfloat forceY) {
 
 
 //@line:145
@@ -168,7 +168,7 @@ JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGro
 
 }
 
-JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_liquidfun_ParticleGroup_jniApplyLinearImpulse(JNIEnv* env, jobject object, jlong addr, jfloat impulseX, jfloat impulseY) {
+JNIEXPORT void JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniApplyLinearImpulse(JNIEnv* env, jobject object, jlong addr, jfloat impulseX, jfloat impulseY) {
 
 
 //@line:154

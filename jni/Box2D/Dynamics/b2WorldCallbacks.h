@@ -296,4 +296,14 @@ public:
 	}
 };
 
+/// Added by finnstr
+class b2ParticleBodyContactListener
+{
+public:
+	virtual ~b2ParticleBodyContactListener() {}
+
+	virtual void BeginContact(b2Body* b, int32 index) {}
+};
+///
+
 #endif

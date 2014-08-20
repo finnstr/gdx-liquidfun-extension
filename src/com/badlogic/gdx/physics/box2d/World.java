@@ -49,6 +49,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
 import finnstr.libgdx.liquidfun.ParticleBodyContact;
+import finnstr.libgdx.liquidfun.ParticleBodyContactListener;
 import finnstr.libgdx.liquidfun.ParticleContact;
 import finnstr.libgdx.liquidfun.ParticleSystem;
 
@@ -76,6 +77,7 @@ static jmethodID shouldQueryParticleSystemID = 0;
 static jmethodID reportRayFixtureID = 0;
 static jmethodID reportRayParticleID = 0;
 static jmethodID rayShouldQueryParticleSystemID = 0;
+static jmethodID particleBodyContactListenerBeginContactID = 0;
 
 class CustomRayCastCallback: public b2RayCastCallback
 {
@@ -229,7 +231,27 @@ public:
 	{
 		return env->CallBooleanMethod(obj, shouldQueryParticleSystemID, (jlong) particleSystem);
 	}
-}; 
+};
+
+class CustomParticleBodyContactListener: public b2ParticleBodyContactListener
+{
+private:
+	JNIEnv* env;
+	jobject obj;
+
+public:
+	CustomParticleBodyContactListener( JNIEnv *env, jobject obj )
+	{
+		this->env = env;
+		this->obj = obj;
+	}
+	
+	virtual void BeginContact(b2Body* b, int32 index)
+	{
+		if( particleBodyContactListenerBeginContactID != 0 )
+			env->CallVoidMethod(obj, particleBodyContactListenerBeginContactID, (jlong)b, index );
+	}
+};
 
 inline b2BodyType getBodyType( int type )
 {
@@ -286,6 +308,9 @@ b2ContactFilter defaultFilter;
 
 	/** Contact listener **/
 	protected ContactListener contactListener = null;
+	
+	/** ParticleBody contact listener **/
+	protected ParticleBodyContactListener particleBodyContactListener = null;
 
 	/** Construct a world object.
 	 * @param gravity the world gravity vector.
@@ -319,6 +344,7 @@ b2ContactFilter defaultFilter;
 			reportRayParticleID = env->GetMethodID(worldClass, "reportRayParticle", "(JIFFFFF)F" );
 			rayShouldQueryParticleSystemID = env->GetMethodID( worldClass, "rayShouldQueryParticleSystem", "(J)Z");
 			shouldCollideID = env->GetMethodID( worldClass, "contactFilter", "(JJ)Z");
+			particleBodyContactListenerBeginContactID = env->GetMethodID(worldClass, "beginContact", "(JI)V" );
 		}
 	
 		b2World* world = new b2World( b2Vec2( gravityX, gravityY ));
@@ -722,11 +748,14 @@ b2ContactFilter defaultFilter;
 		b2World* world = (b2World*)addr;
 		CustomContactFilter contactFilter(env, object);
 		CustomContactListener contactListener(env, object);
+		CustomParticleBodyContactListener particleBodyContactListener(env, object);
 		world->SetContactFilter(&contactFilter);
 		world->SetContactListener(&contactListener);
+		world->m_particleBodyContactListener = &particleBodyContactListener;
 		world->Step( timeStep, velocityIterations, positionIterations );
 		world->SetContactFilter(&defaultFilter);
 		world->SetContactListener(0);
+		world->m_particleBodyContactListener = 0;
 	*/
 
 	/** Manually clear the force buffer on all bodies. By default, forces are cleared automatically after each call to Step. The
@@ -1111,6 +1140,14 @@ b2ContactFilter defaultFilter;
 	
 	private boolean rayShouldQueryParticleSystem(long particleSystem) {
 		return rayCastCallback.shouldQueryParticleSystem(this.particleSystems.get(particleSystem));
+	}
+	
+	private void beginContact(long bodyAddr, int index) {
+		particleBodyContactListener.beginContact(bodyAddr, index);
+	}
+	
+	public void setParticleBodyContactListener(ParticleBodyContactListener listener) {
+		particleBodyContactListener = listener;
 	}
 	
 	public long getAddress() {

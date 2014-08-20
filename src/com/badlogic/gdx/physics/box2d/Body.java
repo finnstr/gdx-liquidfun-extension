@@ -20,6 +20,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 
+import finnstr.libgdx.liquidfun.ParticleBodyContactListener;
+
 /** A rigid body. These are created via World.CreateBody.
  * @author mzechner */
 public class Body {
@@ -807,4 +809,13 @@ inline b2BodyType getBodyType( int type )
 	public void setUserData (Object userData) {
 		this.userData = userData;
 	}
+	
+	public void setUseParticleBodyContactListener(boolean use) {
+		jniSetUseParticleBodyContactListener(addr, use);
+	}
+	
+	private native void jniSetUseParticleBodyContactListener(long addr, boolean use); /*
+		b2Body* body = (b2Body*)addr;
+		body->SetUseParticleBodyContactListener(use);
+	*/
 }
