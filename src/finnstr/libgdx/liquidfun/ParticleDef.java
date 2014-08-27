@@ -75,7 +75,7 @@ public class ParticleDef {
 	public final Vector2 position = new Vector2();
 
 	/** The linear velocity of the particle in world co-ordinates. **/
-	public final Vector2 velocitiy = new Vector2();
+	public final Vector2 velocity = new Vector2();
 
 	/** The color of the particle. **/
 	public final Color color = new Color(0, 0, 0, 0);

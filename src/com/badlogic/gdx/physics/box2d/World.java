@@ -171,7 +171,7 @@ public:
 		virtual void EndContact(b2Fixture* fixture, b2ParticleSystem* particleSystem, int32 index)
 		{
 			if( endParticleBodyContactID != 0 )
-				env->CallVoidMethod(obj, endParticleBodyContactID, (jlong)fixture, (jlong)particleSystem, index);
+				env->CallVoidMethod(obj, endParticleBodyContactID, (jlong)fixture, (jlong)particleSystem, (jint) index);
 		}
 		
 		/// Called when two particles begin to touch
@@ -185,21 +185,21 @@ public:
 		virtual void EndContact(b2ParticleSystem* particleSystem, int32 indexA, int32 indexB)
 		{
 			if( endParticleContactID != 0 )
-				env->CallVoidMethod(obj, endParticleContactID, (jlong)particleSystem, indexA, indexB);
+				env->CallVoidMethod(obj, endParticleContactID, (jlong)particleSystem, (jint) indexA, (jint) indexB);
 		}
 		
 		/// This is called after a contact is updated.
 		virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 		{
 			if( preSolveID != 0 )
-				env->CallVoidMethod(obj, preSolveID, (jlong)contact, (jlong)oldManifold);
+				env->CallVoidMethod(obj, preSolveID, (jlong) contact, (jlong) oldManifold);
 		}
 	
 		/// This lets you inspect a contact after the solver is finished.
 		virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
 		{
 			if( postSolveID != 0 )
-				env->CallVoidMethod(obj, postSolveID, (jlong)contact, (jlong)impulse);
+				env->CallVoidMethod(obj, postSolveID, (jlong) contact, (jlong) impulse);
 		}
 };
 
@@ -240,7 +240,7 @@ private:
 	jobject obj;
 
 public:
-	CustomParticleBodyContactListener( JNIEnv *env, jobject obj )
+	CustomParticleBodyContactListener( JNIEnv* env, jobject obj )
 	{
 		this->env = env;
 		this->obj = obj;
@@ -249,7 +249,7 @@ public:
 	virtual void BeginContact(b2Body* b, int32 index)
 	{
 		if( particleBodyContactListenerBeginContactID != 0 )
-			env->CallVoidMethod(obj, particleBodyContactListenerBeginContactID, (jlong)b, index );
+			env->CallVoidMethod(obj, particleBodyContactListenerBeginContactID, (jlong) b, (jint) index );
 	}
 };
 
@@ -344,7 +344,7 @@ b2ContactFilter defaultFilter;
 			reportRayParticleID = env->GetMethodID(worldClass, "reportRayParticle", "(JIFFFFF)F" );
 			rayShouldQueryParticleSystemID = env->GetMethodID( worldClass, "rayShouldQueryParticleSystem", "(J)Z");
 			shouldCollideID = env->GetMethodID( worldClass, "contactFilter", "(JJ)Z");
-			particleBodyContactListenerBeginContactID = env->GetMethodID(worldClass, "beginContact", "(JI)V" );
+			particleBodyContactListenerBeginContactID = env->GetMethodID(worldClass, "beginParticleContact", "(JI)V" );
 		}
 	
 		b2World* world = new b2World( b2Vec2( gravityX, gravityY ));
@@ -1142,8 +1142,8 @@ b2ContactFilter defaultFilter;
 		return rayCastCallback.shouldQueryParticleSystem(this.particleSystems.get(particleSystem));
 	}
 	
-	private void beginContact(long bodyAddr, int index) {
-		particleBodyContactListener.beginContact(bodyAddr, index);
+	private void beginParticleContact(long bodyAddr, int index) {
+		if(particleBodyContactListener != null) particleBodyContactListener.beginContact(bodyAddr, index);
 	}
 	
 	public void setParticleBodyContactListener(ParticleBodyContactListener listener) {

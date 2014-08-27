@@ -818,4 +818,8 @@ inline b2BodyType getBodyType( int type )
 		b2Body* body = (b2Body*)addr;
 		body->SetUseParticleBodyContactListener(use);
 	*/
+	
+	public long getAddress() {
+		return addr;
+	}
 }

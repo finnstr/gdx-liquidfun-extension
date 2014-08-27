@@ -104,7 +104,7 @@ public class ParticleSystem {
 		boolean addToGroup = true;
 		if(def.group == null) addToGroup = false;
 		
-		return jniCreateParticle(addr, flags, def.position.x, def.position.y, def.velocitiy.x, def.velocitiy.y,
+		return jniCreateParticle(addr, flags, def.position.x, def.position.y, def.velocity.x, def.velocity.y,
 			(int) (def.color.r * 255f), (int) (def.color.g * 255f), (int) (def.color.b * 255f), (int) (def.color.a * 255f),
 			def.lifetime, addToGroup, addToGroup ? def.group.addr : -1);
 	}
