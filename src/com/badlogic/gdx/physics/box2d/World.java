@@ -740,11 +740,11 @@ b2ContactFilter defaultFilter;
 	 * @param timeStep the amount of time to simulate, this should not vary.
 	 * @param velocityIterations for the velocity constraint solver.
 	 * @param positionIterations for the position constraint solver. */
-	public void step (float timeStep, int velocityIterations, int positionIterations) {
-		jniStep(addr, timeStep, velocityIterations, positionIterations);
+	public void step (float timeStep, int velocityIterations, int positionIterations, int particleIterations) {
+		jniStep(addr, timeStep, velocityIterations, positionIterations, particleIterations);
 	}
 
-	private native void jniStep (long addr, float timeStep, int velocityIterations, int positionIterations); /*
+	private native void jniStep (long addr, float timeStep, int velocityIterations, int positionIterations, int particleIterations); /*
 		b2World* world = (b2World*)addr;
 		CustomContactFilter contactFilter(env, object);
 		CustomContactListener contactListener(env, object);
@@ -752,7 +752,7 @@ b2ContactFilter defaultFilter;
 		world->SetContactFilter(&contactFilter);
 		world->SetContactListener(&contactListener);
 		world->m_particleBodyContactListener = &particleBodyContactListener;
-		world->Step( timeStep, velocityIterations, positionIterations );
+		world->Step( timeStep, velocityIterations, positionIterations, particleIterations );
 		world->SetContactFilter(&defaultFilter);
 		world->SetContactListener(0);
 		world->m_particleBodyContactListener = 0;
@@ -932,7 +932,7 @@ b2ContactFilter defaultFilter;
 	private final Array<Contact> contacts = new Array<Contact>();
 	private final Array<Contact> freeContacts = new Array<Contact>();
 
-	/** Returns the list of {@link Contact} instances produced by the last call to {@link #step(float, int, int)}. Note that the
+	/** Returns the list of {@link Contact} instances produced by the last call to {@link #step(float, int, int, int)}. Note that the
 	 * returned list will have O(1) access times when using indexing. contacts are created and destroyed in the middle of a time
 	 * step. Use {@link ContactListener} to avoid missing contacts
 	 * @return the contact list */

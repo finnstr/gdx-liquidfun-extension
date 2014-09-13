@@ -1,6 +1,7 @@
 
 package finnstr.libgdx.liquidfun;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -54,6 +55,12 @@ public class ParticleDebugRenderer {
 	}
 	
 	static final public ShaderProgram createShader(Color pColor) {
+		String prefix = "";
+		if(Gdx.app.getType() == ApplicationType.Desktop)
+			prefix +="#version 120\n";
+		else
+			prefix +="#version 100\n";
+		
 		final String vertexShader = 
 				"attribute vec4 a_position;\n" //
 				+ "\n" //
@@ -82,8 +89,8 @@ public class ParticleDebugRenderer {
 				+ " }\n" //
 				+ "}";
 		
-		ShaderProgram shader = new ShaderProgram(vertexShader,
-				fragmentShader);
+		ShaderProgram shader = new ShaderProgram(prefix + vertexShader,
+				prefix + fragmentShader);
 		if (shader.isCompiled() == false) {
 			Gdx.app.log("ERROR", shader.getLog());
 		}
