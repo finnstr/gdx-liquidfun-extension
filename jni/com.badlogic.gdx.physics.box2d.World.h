@@ -138,10 +138,10 @@ JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniDestroyJoint
 /*
  * Class:     com_badlogic_gdx_physics_box2d_World
  * Method:    jniStep
- * Signature: (JFII)V
+ * Signature: (JFIII)V
  */
 JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniStep
-  (JNIEnv *, jobject, jlong, jfloat, jint, jint);
+  (JNIEnv *, jobject, jlong, jfloat, jint, jint, jint);
 
 /*
  * Class:     com_badlogic_gdx_physics_box2d_World

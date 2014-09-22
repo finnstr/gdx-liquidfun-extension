@@ -25,6 +25,14 @@ JNIEXPORT jint JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetBufferI
 
 /*
  * Class:     finnstr_libgdx_liquidfun_ParticleGroup
+ * Method:    jniGetParticleCount
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_finnstr_libgdx_liquidfun_ParticleGroup_jniGetParticleCount
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     finnstr_libgdx_liquidfun_ParticleGroup
  * Method:    jniGetGroupFlags
  * Signature: (J)I
  */

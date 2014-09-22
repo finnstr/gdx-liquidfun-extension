@@ -546,7 +546,7 @@ JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniDestroyJoint
 
 }
 
-JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniStep(JNIEnv* env, jobject object, jlong addr, jfloat timeStep, jint velocityIterations, jint positionIterations) {
+JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniStep(JNIEnv* env, jobject object, jlong addr, jfloat timeStep, jint velocityIterations, jint positionIterations, jint particleIterations) {
 
 
 //@line:747
@@ -558,7 +558,7 @@ JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniStep(JNIEnv*
 		world->SetContactFilter(&contactFilter);
 		world->SetContactListener(&contactListener);
 		world->m_particleBodyContactListener = &particleBodyContactListener;
-		world->Step( timeStep, velocityIterations, positionIterations );
+		world->Step( timeStep, velocityIterations, positionIterations, particleIterations );
 		world->SetContactFilter(&defaultFilter);
 		world->SetContactListener(0);
 		world->m_particleBodyContactListener = 0;

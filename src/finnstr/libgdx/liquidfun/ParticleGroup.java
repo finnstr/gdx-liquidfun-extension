@@ -45,6 +45,15 @@ public class ParticleGroup {
 		return (jint)group->GetBufferIndex();
 	*/
 	
+	public int getParticleCount() {
+		return jniGetParticleCount(addr);
+	}
+	
+	private native int jniGetParticleCount(long addr); /*
+		b2ParticleGroup* group = (b2ParticleGroup*)addr;
+		return (jint)group->GetParticleCount();
+	*/
+	
 	public int getGroupFlags() {
 		return jniGetGroupFlags(addr);
 	}
